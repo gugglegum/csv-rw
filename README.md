@@ -1,22 +1,25 @@
 # CSV Reader & Writer
 
-This is easy to use Composer component to read and write CSV files in very convenient way. The CSV Reader is actually
-an OO-wrapper on `fgetcsv()` built-in PHP function. It adds exceptions on errors, implements `Iterator` interface.
-You can open a CSV file and then iterate CSV reader in `foreach` statement like array. It supports headers of columns,
+This is easy to use Composer package to read and write CSV files in very convenient way. The CSV Reader is actually
+an OO-wrapper on the `fgetcsv()` built-in PHP function. It adds exceptions on errors and implements `Iterator` interface.
+You can iterate CSV reader in `foreach` statement like array. It supports headers of columns,
 so you may handle with associative data arrays. Headers may be read from first line of CSV file or be set manually.
 Or be read from first line and then changed by some reflection function or whatever you want.
 
-Instead of opening you also can assign already opened file handle or stream. This components adds validation of data 
+Instead of opening you also can assign already opened file handle or stream. This package contains validation of data 
 consistency. For example, it throws an exception if some row contains less or more columns than previous one. Therefore
 you don't need to always check type of return values. Just use `try .. catch` statement and catch exceptions if 
-necessary. Package uses strong typing for scalars came to us from PHP7.
+necessary. The package uses strong typing for scalars came to us from PHP7.
 
 ## Usage
 
 ### Read CSV
 
 ```php
-$csv = new \gugglegum\CsvRw\CsvReader(new \gugglegum\CsvRw\CsvFormat([
+use \gugglegum\CsvRw\CsvReader;
+use \gugglegum\CsvRw\CsvFormat;
+
+$csv = new CsvReader(new CsvFormat([
     'delimiter' => ',',
     'enclosure' => '"',
     'escape' => '\\',
@@ -51,7 +54,7 @@ mv ./composer.phar ~/bin/composer # or /usr/local/bin/composer
 composer require gugglegum/csv-rw
 ```
 
-### Add composer's autoloader
+### Add composer's autoloader to you code
 
 ```
 require 'vendor/autoload.php';
