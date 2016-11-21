@@ -1,0 +1,21 @@
+{
+  "name": "gugglegum/csv-rw",
+  "description": "CSV reader and writer",
+  "type": "library",
+  "keywords": ["csv", "parser", "reader", "writer"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Paul Melekhov",
+      "email": "gugglegum@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "gugglegum\\CsvRw\\": ""
+    }
+  },
+  "require": {
+    "php": ">=7.0.0"
+  }
+}
