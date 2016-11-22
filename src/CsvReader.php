@@ -92,14 +92,16 @@ class CsvReader implements Iterator
      * @param string $fileName    File name or URL/steam
      * @param bool   $withHeaders TRUE indicates that first line contains header names
      * @param array  $headers     OPTIONAL Headers to use if CSV without header-line or to override CSV headers
+     * @return CsvReader
      * @throws Exception
      */
-    public function open(string $fileName, bool $withHeaders, array $headers = null)
+    public function open(string $fileName, bool $withHeaders, array $headers = null): CsvReader
     {
         if (!$fileHandle = @fopen($fileName, 'r')) {
             throw new Exception("Failed to open CSV file \"{$fileName}\" for reading");
         }
         $this->assign($fileHandle, $withHeaders, $headers);
+        return $this;
     }
 
     /**
@@ -118,14 +120,16 @@ class CsvReader implements Iterator
      * @param resource $fileHandle  Opened file handle
      * @param bool     $withHeaders TRUE indicates that first line contains header names
      * @param array    $headers     OPTIONAL Headers to use if CSV without header-line or to override CSV headers
+     * @return CsvReader
      * @throws Exception
      */
-    public function assign($fileHandle, bool $withHeaders, array $headers = null)
+    public function assign($fileHandle, bool $withHeaders, array $headers = null): CsvReader
     {
         $this->fileHandle = $fileHandle;
         $this->withHeaders = $withHeaders;
         $this->headers = $headers;
         $this->isInitialized = false;
+        return $this;
     }
 
     /**
@@ -290,6 +294,20 @@ class CsvReader implements Iterator
             $this->currentRow = null;
         }
         $this->currentIndex++;
+    }
+
+    /**
+     * Returns all rows from CSV file
+     *
+     * @return array
+     */
+    public function getAllRows()
+    {
+        $rows = [];
+        foreach ($this as $row) {
+            $rows[] = $row;
+        }
+        return $rows;
     }
 
     /**
