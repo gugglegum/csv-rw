@@ -13,6 +13,8 @@ necessary. The package uses strong typing for scalars came to us from PHP7.
 
 ## Usage
 
+See more examples of usage in `/test` folder.
+
 ### Read CSV
 
 ```php
@@ -35,7 +37,34 @@ $csv->close();
 
 ### Write CSV
 
-Sorry, only reader implemented at the moment.
+```php
+use gugglegum\CsvRw\CsvFormat;
+use gugglegum\CsvRw\CsvWriter;
+
+$headers = ['id', 'firstName', 'lastName'];
+
+$rows = [
+    [
+        'id' => 1,
+        'firstName' => 'John',
+        'lastName' => 'Smith',
+    ],
+];
+
+$csv = new CsvWriter(new CsvFormat([
+   'delimiter' => ',',
+   'enclosure' => '"',
+   'escape' => '\\',
+]));
+
+$csv->open('output.csv', CsvWriter::WITH_HEADERS, $headers);
+
+foreach ($rows as $row) {
+    $csv->writeRow($row);
+}
+
+$csv->close();
+```
 
 ## Installation
 
