@@ -28,12 +28,12 @@ echo "Testing CsvReader:\n";
 $passed = 0;
 $failed = 0;
 foreach ($tests as $testScript => $expectedOutputMd5) {
-    if (getMd5OfCommandOutput('php tests/reader/' . $testScript) === $expectedOutputMd5) {
+    if (($md5sum = getMd5OfCommandOutput('php tests/reader/' . $testScript)) === $expectedOutputMd5) {
         echo '.';
         $passed++;
     } else {
         echo 'E';
-        //echo "\n" . getMd5OfCommandOutput('php ' . $testScript) . "\n";
+        //echo "\n" . $md5sum . "\n";
         $failed++;
     }
 }
