@@ -4,9 +4,9 @@ use gugglegum\CsvRw\CsvFormat;
 use gugglegum\CsvRw\CsvReader;
 use gugglegum\CsvRw\Exception;
 
-require_once __DIR__ . '/../../src/CsvFormat.php';
-require_once __DIR__ . '/../../src/CsvReader.php';
-require_once __DIR__ . '/../../src/Exception.php';
+require_once __DIR__ . '/../../../src/CsvFormat.php';
+require_once __DIR__ . '/../../../src/CsvReader.php';
+require_once __DIR__ . '/../../../src/Exception.php';
 
 $options = [
     'delimiter' => ',',
@@ -18,13 +18,8 @@ $csv = new CsvReader(new CsvFormat($options));
 
 // Parse file #1
 
-if (!$handle = @fopen(__DIR__ . '/../samples/sample-10.with-header.csv', 'r')) {
-    echo "ERROR: Failed to open CSV file\n";
-    exit;
-}
-
 try{
-    $csv->assign($handle, CsvReader::WITH_HEADERS);
+    $csv->open(__DIR__ . '/../../samples/sample-10.with-header.csv', CsvReader::WITH_HEADERS);
 
     while ($csv->valid()) {
         $row = $csv->current();
@@ -42,7 +37,7 @@ try{
 
 // Parse file #2
 
-if (!$handle = @fopen(__DIR__ . '/../samples/sample-10.with-header.tabs.csv', 'r')) {
+if (!$handle = @fopen(__DIR__ . '/../../samples/sample-10.with-header.tabs.csv', 'r')) {
     echo "ERROR: Failed to open CSV file\n";
     exit;
 }

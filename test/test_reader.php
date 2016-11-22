@@ -28,7 +28,7 @@ echo "Testing CsvReader:\n";
 $passed = 0;
 $failed = 0;
 foreach ($tests as $testScript => $expectedOutputMd5) {
-    if (getMd5OfCommandOutput('php tests/' . $testScript) === $expectedOutputMd5) {
+    if (getMd5OfCommandOutput('php tests/reader/' . $testScript) === $expectedOutputMd5) {
         echo '.';
         $passed++;
     } else {

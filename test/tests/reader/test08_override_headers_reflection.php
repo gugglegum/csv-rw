@@ -4,9 +4,9 @@ use gugglegum\CsvRw\CsvFormat;
 use gugglegum\CsvRw\CsvReader;
 use gugglegum\CsvRw\Exception;
 
-require_once __DIR__ . '/../../src/CsvFormat.php';
-require_once __DIR__ . '/../../src/CsvReader.php';
-require_once __DIR__ . '/../../src/Exception.php';
+require_once __DIR__ . '/../../../src/CsvFormat.php';
+require_once __DIR__ . '/../../../src/CsvReader.php';
+require_once __DIR__ . '/../../../src/Exception.php';
 
 $options = [
     'delimiter' => ',',
@@ -26,7 +26,7 @@ $underscoreToCamelCaseLowerFirstReflection = function(string $key) : string
 $csv = new CsvReader(new CsvFormat($options));
 
 try{
-    $csv->open(__DIR__ . '/../samples/sample-10.with-header.csv', CsvReader::WITH_HEADERS);
+    $csv->open(__DIR__ . '/../../samples/sample-10.with-header.csv', CsvReader::WITH_HEADERS);
 
     $csv->setHeaders(array_map($underscoreToCamelCaseLowerFirstReflection, $csv->getHeaders()));
 

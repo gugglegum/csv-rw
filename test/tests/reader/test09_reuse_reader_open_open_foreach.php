@@ -4,9 +4,9 @@ use gugglegum\CsvRw\CsvFormat;
 use gugglegum\CsvRw\CsvReader;
 use gugglegum\CsvRw\Exception;
 
-require_once __DIR__ . '/../../src/CsvFormat.php';
-require_once __DIR__ . '/../../src/CsvReader.php';
-require_once __DIR__ . '/../../src/Exception.php';
+require_once __DIR__ . '/../../../src/CsvFormat.php';
+require_once __DIR__ . '/../../../src/CsvReader.php';
+require_once __DIR__ . '/../../../src/Exception.php';
 
 $options = [
     'delimiter' => ',',
@@ -19,7 +19,7 @@ $csv = new CsvReader(new CsvFormat($options));
 // Parse file #1
 
 try{
-    $csv->open(__DIR__ . '/../samples/sample-10.with-header.csv', CsvReader::WITH_HEADERS);
+    $csv->open(__DIR__ . '/../../samples/sample-10.with-header.csv', CsvReader::WITH_HEADERS);
 
     foreach ($csv as $index => $row) {
         echo "{$index}: Line {$csv->getLineNumber()}\n";
@@ -38,7 +38,7 @@ try{
 try{
     $csv->getCsvFormat()
         ->setDelimiter("\t");
-    $csv->open(__DIR__ . '/../samples/sample-10.with-header.tabs.csv', CsvReader::WITH_HEADERS);
+    $csv->open(__DIR__ . '/../../samples/sample-10.with-header.tabs.csv', CsvReader::WITH_HEADERS);
 
     foreach ($csv as $index => $row) {
         echo "{$index}: Line {$csv->getLineNumber()}\n";

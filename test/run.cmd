@@ -1,1 +1,1 @@
-php "%~dp0test_all.php"
+php "%~dp0test_reader.php"
