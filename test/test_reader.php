@@ -1,26 +1,34 @@
 <?php
 
 $tests = [
-    'test01_foreach_open.php'                       => 'c8dbb23a87e985315bdc5bce1ee55832',
-    'test02_foreach_assign.php'                     => 'c8dbb23a87e985315bdc5bce1ee55832',
-    'test03_while_open.php'                         => 'c8dbb23a87e985315bdc5bce1ee55832',
-    'test04_while_assign.php'                       => 'c8dbb23a87e985315bdc5bce1ee55832',
-    'test05_without_headers.php'                    => '3a21c1669ef408a65b7a7290331e36bd',
-    'test06_force_headers.php'                      => 'fea60409e4b38b8f4294d104c90e7413',
-    'test07_override_headers_hardcoded.php'         => 'f305f0105da1c660f205d02e5d2d657c',
-    'test08_override_headers_reflection.php'        => 'f305f0105da1c660f205d02e5d2d657c',
-    'test09_reuse_reader_open_open_foreach.php'     => '38347921852a9033cfa1a6391890ec9b',
-    'test10_reuse_reader_open_assign_foreach.php'   => '38347921852a9033cfa1a6391890ec9b',
-    'test11_reuse_reader_assign_open_foreach.php'   => '38347921852a9033cfa1a6391890ec9b',
-    'test12_reuse_reader_assign_assign_foreach.php' => '38347921852a9033cfa1a6391890ec9b',
-    'test13_reuse_reader_open_open_while.php'       => '38347921852a9033cfa1a6391890ec9b',
-    'test14_reuse_reader_open_assign_while.php'     => '38347921852a9033cfa1a6391890ec9b',
-    'test15_reuse_reader_assign_open_while.php'     => '38347921852a9033cfa1a6391890ec9b',
-    'test16_reuse_reader_assign_assign_while.php'   => '38347921852a9033cfa1a6391890ec9b',
-    'test17_read_broken_with_headers.php'           => '88348b8d43c1e7bf46a9d1be748dcef5',
-    'test18_read_broken_without_headers.php'        => '5cd5d0533aae7f50b01727bdeba4eeac',
-    'test19_multiline_with_header.php'              => '6983a8764438d8ab6fca6d90790146e9',
-    'test20_multiline_without_header.php'           => 'a57678af713c2f425093100b2c89a6e5',
+    'php tests/reader/test01_foreach_open.php'                       => 'c8dbb23a87e985315bdc5bce1ee55832',
+    'php tests/reader/test02_foreach_assign.php'                     => 'c8dbb23a87e985315bdc5bce1ee55832',
+    'php tests/reader/test03_while_open.php'                         => 'c8dbb23a87e985315bdc5bce1ee55832',
+    'php tests/reader/test04_while_assign.php'                       => 'c8dbb23a87e985315bdc5bce1ee55832',
+    'php tests/reader/test05_without_headers.php'                    => '3a21c1669ef408a65b7a7290331e36bd',
+    'php tests/reader/test06_force_headers.php'                      => 'fea60409e4b38b8f4294d104c90e7413',
+    'php tests/reader/test07_override_headers_hardcoded.php'         => 'f305f0105da1c660f205d02e5d2d657c',
+    'php tests/reader/test08_override_headers_reflection.php'        => 'f305f0105da1c660f205d02e5d2d657c',
+    'php tests/reader/test09_reuse_reader_open_open_foreach.php'     => '38347921852a9033cfa1a6391890ec9b',
+    'php tests/reader/test10_reuse_reader_open_assign_foreach.php'   => '38347921852a9033cfa1a6391890ec9b',
+    'php tests/reader/test11_reuse_reader_assign_open_foreach.php'   => '38347921852a9033cfa1a6391890ec9b',
+    'php tests/reader/test12_reuse_reader_assign_assign_foreach.php' => '38347921852a9033cfa1a6391890ec9b',
+    'php tests/reader/test13_reuse_reader_open_open_while.php'       => '38347921852a9033cfa1a6391890ec9b',
+    'php tests/reader/test14_reuse_reader_open_assign_while.php'     => '38347921852a9033cfa1a6391890ec9b',
+    'php tests/reader/test15_reuse_reader_assign_open_while.php'     => '38347921852a9033cfa1a6391890ec9b',
+    'php tests/reader/test16_reuse_reader_assign_assign_while.php'   => '38347921852a9033cfa1a6391890ec9b',
+    'php tests/reader/test17_read_broken_with_headers.php'           => '88348b8d43c1e7bf46a9d1be748dcef5',
+    'php tests/reader/test18_read_broken_without_headers.php'        => '5cd5d0533aae7f50b01727bdeba4eeac',
+    'php tests/reader/test19_multiline_with_header.php'              => [
+        'f4f560f35a86eefb83b977e3f2347a5a', // unix line-endings
+        '6983a8764438d8ab6fca6d90790146e9', // windows line-endings
+    ],
+    'php tests/reader/test20_multiline_without_header.php'           => [
+        '53329052325a3280f324baf731a31b72', // unix line-endings
+        'a57678af713c2f425093100b2c89a6e5', // windows line-endings
+    ],
+    'php -r "echo file_get_contents(\'samples/sample-10.with-header.csv\');" | php tests/reader/test21_read_from_nonseekable_stdin.php' => 'c8dbb23a87e985315bdc5bce1ee55832',
+    'php -r "echo file_get_contents(\'samples/sample-10.with-header.csv\');" | php tests/reader/test22_rewind_in_nonseekable_stdin.php' => '32fb245669231162f3679a91bd87bfdd',
 ];
 
 echo "Testing CsvReader:\n";
@@ -28,7 +36,7 @@ echo "Testing CsvReader:\n";
 $passed = 0;
 $failed = 0;
 foreach ($tests as $testScript => $expectedOutputMd5) {
-    if (($md5sum = getMd5OfCommandOutput('php tests/reader/' . $testScript)) === $expectedOutputMd5) {
+    if (in_array($md5sum = getMd5OfCommandOutput($testScript), is_array($expectedOutputMd5) ? $expectedOutputMd5 : [$expectedOutputMd5])) {
         echo '.';
         $passed++;
     } else {

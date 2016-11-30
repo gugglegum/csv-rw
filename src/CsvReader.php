@@ -335,7 +335,13 @@ class CsvReader implements Iterator
      */
     public function rewind()
     {
-        rewind($this->fileHandle);
+        if ($this->lineNumber !== null) {
+            if (stream_get_meta_data($this->fileHandle)['seekable']) {
+                rewind($this->fileHandle);
+            } else {
+                throw new Exception("Cannot rewind not seekable stream");
+            }
+        }
         $this->init();
     }
 
