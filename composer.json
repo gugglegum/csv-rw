@@ -12,7 +12,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "gugglegum\\CsvRw\\": ""
+      "gugglegum\\CsvRw\\": "src/"
     }
   },
   "require": {
