@@ -94,7 +94,7 @@ class CsvWriter
      */
     public function close()
     {
-        fclose($this->fileHandle);
+        fclose($this->getValidFileHandle());
         $this->unAssign();
     }
 
@@ -244,7 +244,7 @@ class CsvWriter
     private function write(array $fields)
     {
         $this->lineNumber++;
-        if (fputcsv($this->fileHandle, $fields, $this->csvFormat->getDelimiter(), $this->csvFormat->getEnclosure(), $this->csvFormat->getEscape()) === false) {
+        if (fputcsv($this->getValidFileHandle(), $fields, $this->csvFormat->getDelimiter(), $this->csvFormat->getEnclosure(), $this->csvFormat->getEscape()) === false) {
             throw new Exception("Failed to write CSV row at line {$this->lineNumber}");
         }
     }
@@ -257,6 +257,23 @@ class CsvWriter
      */
     public function getFileHandle()
     {
+        return $this->fileHandle;
+    }
+    
+    /**
+     * Returns valid file handle CSV reader associated with or raises exception otherwise.
+     *
+     * @return resource
+     * @throws Exception
+     */
+    private function getValidFileHandle()
+    {
+        if (!$this->fileHandle) {
+            throw new Exception("CSV reader not associated with any file or stream");
+        }
+        if (!is_resource($this->fileHandle)) {
+            throw new Exception("CSV reader associated with not valid file handle");
+        }
         return $this->fileHandle;
     }
 }

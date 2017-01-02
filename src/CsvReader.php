@@ -110,7 +110,7 @@ class CsvReader implements Iterator
      */
     public function close()
     {
-        fclose($this->fileHandle);
+        fclose($this->getValidFileHandle());
         $this->unAssign();
     }
 
@@ -318,11 +318,12 @@ class CsvReader implements Iterator
      */
     private function readRow()
     {
-        if (feof($this->fileHandle)) {
+        $fileHandle = $this->getValidFileHandle();
+        if (feof($fileHandle)) {
             return false;
         }
         $this->lineNumber++;
-        if (($row = fgetcsv($this->fileHandle, 0, $this->csvFormat->getDelimiter(), $this->csvFormat->getEnclosure(), $this->csvFormat->getEscape())) === false) {
+        if (($row = fgetcsv($fileHandle, 0, $this->csvFormat->getDelimiter(), $this->csvFormat->getEnclosure(), $this->csvFormat->getEscape())) === false) {
             return false;
         }
         return $row;
@@ -336,8 +337,9 @@ class CsvReader implements Iterator
     public function rewind()
     {
         if ($this->lineNumber !== null) {
-            if (stream_get_meta_data($this->fileHandle)['seekable']) {
-                rewind($this->fileHandle);
+            $fileHandle = $this->getValidFileHandle();
+            if (stream_get_meta_data($fileHandle)['seekable']) {
+                rewind($fileHandle);
             } else {
                 throw new Exception("Cannot rewind not seekable stream");
             }
@@ -349,10 +351,27 @@ class CsvReader implements Iterator
      * Returns file handle CSV Reader associated with. You may use this method to make something with file handle.
      * But in most cases you don't need this.
      *
-     * @return null|resource
+     * @return resource|null
      */
     public function getFileHandle()
     {
+        return $this->fileHandle;
+    }
+
+    /**
+     * Returns valid file handle CSV reader associated with or raises exception otherwise.
+     *
+     * @return resource
+     * @throws Exception
+     */
+    private function getValidFileHandle()
+    {
+        if (!$this->fileHandle) {
+            throw new Exception("CSV reader not associated with any file or stream");
+        }
+        if (!is_resource($this->fileHandle)) {
+            throw new Exception("CSV reader associated with not valid file handle");
+        }
         return $this->fileHandle;
     }
 }
