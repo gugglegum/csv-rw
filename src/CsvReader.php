@@ -77,6 +77,23 @@ class CsvReader implements Iterator
     private $isInitialized;
 
     /**
+     * Reader option: do not abort reading if data row has less columns than headers. Missing data columns will be
+     * treated as NULL values.
+     *
+     * @var bool
+     */
+    private $ignoreLessDataColumns = false;
+
+    /**
+     * Reader option: do not abort reading if data row has more columns than headers. Extra data columns will be added
+     * in row with integer keys according to numbers of columns (starting from zero). But only rows with extra data
+     * columns will have these additional integer keys. This will not affect other normal rows.
+     *
+     * @var bool
+     */
+    private $ignoreMoreDataColumns = false;
+
+    /**
      * CsvReader constructor
      *
      * @param CsvFormat $csvFormat
@@ -285,11 +302,29 @@ class CsvReader implements Iterator
             if ($this->headers === null) {
                 $this->headers = range(0, count($row) - 1);
             }
-            if (count($this->headers) !== count($row)) {
-                throw new Exception("Invalid amount of columns in line {$this->lineNumber} (expected "
-                    . count($this->headers).", got " . count($row) . ")");
+
+            $headers = $this->headers;
+
+            if (count($headers) !== count($row)) {
+                if (count($headers) > count($row)) {
+                    if ($this->isIgnoreLessDataColumns()) {
+                        $row = array_pad($row, count($headers), null);
+                    } else {
+                        throw new Exception("Too few data columns in line {$this->lineNumber} (expected "
+                            . count($this->headers).", got " . count($row) . "). Fix CSV file or try to set \"ignoreLessDataColumns\" option.");
+                    }
+                } elseif (count($headers) < count($row)) {
+                    if ($this->isIgnoreMoreDataColumns()) {
+                        for ($i = count($headers); $i < count($row); $i++) {
+                            $headers[] = $i;
+                        }
+                    } else {
+                        throw new Exception("Too many data columns in line {$this->lineNumber} (expected "
+                            . count($this->headers).", got " . count($row) . "). Fix CSV file or try to set \"ignoreMoreDataColumns\" option.");
+                    }
+                }
             }
-            $this->currentRow = array_combine($this->headers, $row);
+            $this->currentRow = array_combine($headers, $row);
         } else {
             $this->currentRow = null;
         }
@@ -373,5 +408,41 @@ class CsvReader implements Iterator
             throw new Exception("CSV reader associated with not valid file handle");
         }
         return $this->fileHandle;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIgnoreLessDataColumns(): bool
+    {
+        return $this->ignoreLessDataColumns;
+    }
+
+    /**
+     * @param bool $ignoreLessDataColumns
+     * @return self
+     */
+    public function setIgnoreLessDataColumns(bool $ignoreLessDataColumns): self
+    {
+        $this->ignoreLessDataColumns = $ignoreLessDataColumns;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIgnoreMoreDataColumns(): bool
+    {
+        return $this->ignoreMoreDataColumns;
+    }
+
+    /**
+     * @param bool $ignoreMoreDataColumns
+     * @return self
+     */
+    public function setIgnoreMoreDataColumns(bool $ignoreMoreDataColumns): self
+    {
+        $this->ignoreMoreDataColumns = $ignoreMoreDataColumns;
+        return $this;
     }
 }

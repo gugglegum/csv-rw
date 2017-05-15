@@ -17,8 +17,8 @@ $tests = [
     'php tests/reader/test14_reuse_reader_open_assign_while.php'     => '38347921852a9033cfa1a6391890ec9b',
     'php tests/reader/test15_reuse_reader_assign_open_while.php'     => '38347921852a9033cfa1a6391890ec9b',
     'php tests/reader/test16_reuse_reader_assign_assign_while.php'   => '38347921852a9033cfa1a6391890ec9b',
-    'php tests/reader/test17_read_broken_with_headers.php'           => '88348b8d43c1e7bf46a9d1be748dcef5',
-    'php tests/reader/test18_read_broken_without_headers.php'        => '5cd5d0533aae7f50b01727bdeba4eeac',
+    'php tests/reader/test17_read_broken_with_headers.php'           => '61553e77c49cf41b4db12dd1042539b8',
+    'php tests/reader/test18_read_broken_without_headers.php'        => 'd522ccda344d2df42e6cdfdb11d6b6ef',
     'php tests/reader/test19_multiline_with_header.php'              => [
         'f4f560f35a86eefb83b977e3f2347a5a', // unix line-endings
         '6983a8764438d8ab6fca6d90790146e9', // windows line-endings
