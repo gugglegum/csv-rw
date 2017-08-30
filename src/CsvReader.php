@@ -94,6 +94,15 @@ class CsvReader implements Iterator
     private $ignoreMoreDataColumns = false;
 
     /**
+     * Reader option: do not abort reading if CSV file contains empty row (not just finishes with empty new line)
+     * Some services may produce such bad formed data. This option will help you. Note this option skips empty lines
+     * in data section, not before header line.
+     *
+     * @var bool
+     */
+    private $ignoreEmptyDataLines = false;
+
+    /**
      * CsvReader constructor
      *
      * @param CsvFormat $csvFormat
@@ -297,8 +306,14 @@ class CsvReader implements Iterator
         if (!$this->isInitialized) {
             $this->init();
         }
-        $row = $this->readRow();
-        if ($row !== false) {
+
+        while (($row = $this->readRow()) !== false) {
+            $this->currentIndex++;
+
+            if ($row === [ null ] && $this->isIgnoreEmptyDataLines()) {
+                continue;
+            }
+
             if ($this->headers === null) {
                 $this->headers = range(0, count($row) - 1);
             }
@@ -311,7 +326,8 @@ class CsvReader implements Iterator
                         $row = array_pad($row, count($headers), null);
                     } else {
                         throw new Exception("Too few data columns in line {$this->lineNumber} (expected "
-                            . count($this->headers).", got " . count($row) . "). Fix CSV file or try to set \"ignoreLessDataColumns\" option.");
+                            . count($this->headers).", got " . count($row) . "). Fix CSV file or try to set \"ignoreLessDataColumns\""
+                            . ($row === [ null ] ? ' or "ignoreEmptyLines"' : '') . " options.");
                     }
                 } elseif (count($headers) < count($row)) {
                     if ($this->isIgnoreMoreDataColumns()) {
@@ -325,10 +341,11 @@ class CsvReader implements Iterator
                 }
             }
             $this->currentRow = array_combine($headers, $row);
-        } else {
+            break;
+        }
+        if ($row === false) {
             $this->currentRow = null;
         }
-        $this->currentIndex++;
     }
 
     /**
@@ -443,6 +460,24 @@ class CsvReader implements Iterator
     public function setIgnoreMoreDataColumns(bool $ignoreMoreDataColumns): self
     {
         $this->ignoreMoreDataColumns = $ignoreMoreDataColumns;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIgnoreEmptyDataLines(): bool
+    {
+        return $this->ignoreEmptyDataLines;
+    }
+
+    /**
+     * @param bool $ignoreEmptyDataLines
+     * @return CsvReader
+     */
+    public function setIgnoreEmptyDataLines(bool $ignoreEmptyDataLines): CsvReader
+    {
+        $this->ignoreEmptyDataLines = $ignoreEmptyDataLines;
         return $this;
     }
 }

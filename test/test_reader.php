@@ -29,6 +29,8 @@ $tests = [
     ],
     'php -r "echo file_get_contents(\'samples/sample-10.with-header.csv\');" | php tests/reader/test21_read_from_nonseekable_stdin.php' => 'c8dbb23a87e985315bdc5bce1ee55832',
     'php -r "echo file_get_contents(\'samples/sample-10.with-header.csv\');" | php tests/reader/test22_rewind_in_nonseekable_stdin.php' => '32fb245669231162f3679a91bd87bfdd',
+    'php tests/reader/test23_ignore_empty_lines.php'                 => '87666d6c838a0317186a6a246bbd228e',
+    'php tests/reader/test24_not_ignore_empty_lines.php'             => 'c8515a41d6ef604ee703d1056c0dd908',
 ];
 
 echo "Testing CsvReader:\n";
