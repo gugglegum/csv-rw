@@ -91,6 +91,8 @@ class CsvWriter
     /**
      * Closes CSV file or URL/stream and resets internal state. This method should be called after `open()` method if
      * you no more want to read.
+     *
+     * @throws Exception
      */
     public function close()
     {
@@ -105,7 +107,6 @@ class CsvWriter
      * @param bool     $withHeaders TRUE indicates that first line contains header names
      * @param array    $headers     OPTIONAL Headers to use if CSV without header-line or to override CSV headers
      * @return $this
-     * @throws Exception
      */
     public function assign($fileHandle, bool $withHeaders, array $headers = null)
     {
@@ -181,7 +182,6 @@ class CsvWriter
      * Returns a names of columns which was read from first line or set manually
      *
      * @return null|array
-     * @throws Exception
      */
     public function getHeaders()
     {
@@ -241,6 +241,12 @@ class CsvWriter
         $this->write($fields);
     }
 
+    /**
+     * Writes a line in CSV
+     *
+     * @param array $fields
+     * @throws Exception
+     */
     private function write(array $fields)
     {
         $this->lineNumber++;

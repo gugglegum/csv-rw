@@ -133,6 +133,8 @@ class CsvReader implements Iterator
     /**
      * Closes CSV file or URL/stream and resets internal state. This method should be called after `open()` method if
      * you no more want to read.
+     *
+     * @throws Exception
      */
     public function close()
     {
@@ -147,7 +149,6 @@ class CsvReader implements Iterator
      * @param bool     $withHeaders TRUE indicates that first line contains header names
      * @param array    $headers     OPTIONAL Headers to use if CSV without header-line or to override CSV headers
      * @return CsvReader
-     * @throws Exception
      */
     public function assign($fileHandle, bool $withHeaders, array $headers = null): CsvReader
     {
