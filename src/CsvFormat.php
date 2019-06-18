@@ -36,7 +36,6 @@ class CsvFormat
      * CsvOptions constructor
      *
      * @param array|null $options
-     * @throws Exception
      */
     public function __construct(array $options = null)
     {
@@ -47,7 +46,6 @@ class CsvFormat
 
     /**
      * @param array $options
-     * @throws Exception
      */
     public function setFromArray(array $options)
     {
@@ -70,7 +68,6 @@ class CsvFormat
 
     /**
      * @return string
-     * @throws Exception
      */
     public function getDelimiter(): string
     {
@@ -92,7 +89,6 @@ class CsvFormat
 
     /**
      * @return string
-     * @throws Exception
      */
     public function getEnclosure(): string
     {
@@ -114,7 +110,6 @@ class CsvFormat
 
     /**
      * @return string
-     * @throws Exception
      */
     public function getEscape(): string
     {

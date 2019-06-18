@@ -54,14 +54,14 @@ class CsvWriter
     private $fileHandle;
 
     /**
-     * Indicates whether reader initialized or not
+     * Indicates whether writer initialized or not
      *
      * @var bool
      */
     private $isInitialized;
 
     /**
-     * CsvReader constructor
+     * CsvWriter constructor
      *
      * @param CsvFormat $csvFormat
      */
@@ -76,10 +76,9 @@ class CsvWriter
      * @param string $fileName    File name or URL/steam
      * @param bool   $withHeaders TRUE indicates that first line contains header names
      * @param array  $headers     OPTIONAL Headers to use if CSV without header-line or to override CSV headers
-     * @return $this
-     * @throws Exception
+     * @return CsvWriter
      */
-    public function open(string $fileName, bool $withHeaders, array $headers = null)
+    public function open(string $fileName, bool $withHeaders, array $headers = null): CsvWriter
     {
         if (!$fileHandle = @fopen($fileName, 'w')) {
             throw new Exception("Failed to open CSV file \"{$fileName}\" for writing");
@@ -91,8 +90,6 @@ class CsvWriter
     /**
      * Closes CSV file or URL/stream and resets internal state. This method should be called after `open()` method if
      * you no more want to read.
-     *
-     * @throws Exception
      */
     public function close()
     {
@@ -106,9 +103,9 @@ class CsvWriter
      * @param resource $fileHandle  Opened file handle
      * @param bool     $withHeaders TRUE indicates that first line contains header names
      * @param array    $headers     OPTIONAL Headers to use if CSV without header-line or to override CSV headers
-     * @return $this
+     * @return CsvWriter
      */
-    public function assign($fileHandle, bool $withHeaders, array $headers = null)
+    public function assign($fileHandle, bool $withHeaders, array $headers = null): CsvWriter
     {
         $this->fileHandle = $fileHandle;
         $this->withHeaders = $withHeaders;
@@ -118,7 +115,7 @@ class CsvWriter
     }
 
     /**
-     * Un-assigns file handle from CSV reader. This method should be called after `assign()` method if you no more want
+     * Un-assigns file handle from CSV writer. This method should be called after `assign()` method if you no more want
      * to read.
      */
     public function unAssign()
@@ -133,7 +130,6 @@ class CsvWriter
      * Initializes internal state of newly opened or assigned file
      *
      * @return CsvWriter
-     * @throws Exception
      */
     public function init(): CsvWriter
     {
@@ -210,7 +206,6 @@ class CsvWriter
      * (contain keys 0, 1, 2, ...). Amount of elements must be the same for all rows.
      *
      * @param array $row Associative or ordered array with data of row to write in CSV
-     * @throws Exception
      */
     public function writeRow(array $row)
     {
@@ -247,7 +242,6 @@ class CsvWriter
      * Writes a line in CSV
      *
      * @param array $fields
-     * @throws Exception
      */
     private function write(array $fields)
     {
@@ -258,7 +252,7 @@ class CsvWriter
     }
 
     /**
-     * Returns file handle CSV Reader associated with. You may use this method to make something with file handle.
+     * Returns file handle CSV writer associated with. You may use this method to make something with file handle.
      * But in most cases you don't need this.
      *
      * @return null|resource
@@ -269,18 +263,17 @@ class CsvWriter
     }
     
     /**
-     * Returns valid file handle CSV reader associated with or raises exception otherwise.
+     * Returns valid file handle CSV writer associated with or raises exception otherwise.
      *
      * @return resource
-     * @throws Exception
      */
     private function getValidFileHandle()
     {
         if (!$this->fileHandle) {
-            throw new Exception("CSV reader not associated with any file or stream");
+            throw new Exception("CSV writer not associated with any file or stream");
         }
         if (!is_resource($this->fileHandle)) {
-            throw new Exception("CSV reader associated with not valid file handle");
+            throw new Exception("CSV writer associated with not valid file handle");
         }
         return $this->fileHandle;
     }

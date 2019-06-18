@@ -119,7 +119,6 @@ class CsvReader implements Iterator
      * @param bool   $withHeaders TRUE indicates that first line contains header names
      * @param array  $headers     OPTIONAL Headers to use if CSV without header-line or to override CSV headers
      * @return CsvReader
-     * @throws Exception
      */
     public function open(string $fileName, bool $withHeaders, array $headers = null): CsvReader
     {
@@ -133,8 +132,6 @@ class CsvReader implements Iterator
     /**
      * Closes CSV file or URL/stream and resets internal state. This method should be called after `open()` method if
      * you no more want to read.
-     *
-     * @throws Exception
      */
     public function close()
     {
@@ -173,8 +170,6 @@ class CsvReader implements Iterator
 
     /**
      * Initializes internal state of newly opened or assigned file
-     *
-     * @throws Exception
      */
     private function init()
     {
@@ -230,7 +225,6 @@ class CsvReader implements Iterator
      * Returns a names of columns which was read from first line or set manually
      *
      * @return null|array
-     * @throws Exception
      */
     public function getHeaders()
     {
@@ -257,7 +251,6 @@ class CsvReader implements Iterator
      * returns its first row. If column headers are set the row represents an associative array, ordered array otherwise.
      *
      * @return array|null
-     * @throws Exception
      */
     public function current()
     {
@@ -272,7 +265,6 @@ class CsvReader implements Iterator
      * (no matter is CSV file empty or not).
      *
      * @return int|null
-     * @throws Exception
      */
     public function key()
     {
@@ -286,7 +278,6 @@ class CsvReader implements Iterator
      * Returns TRUE if current row is valid. It returns FALSE if and only if `key()` pointing to end of file.
      *
      * @return bool
-     * @throws Exception
      */
     public function valid()
     {
@@ -299,8 +290,6 @@ class CsvReader implements Iterator
     /**
      * Reads a row from CSV file and updates current iterator state. This method should be used to iterate CSV file
      * rows.
-     *
-     * @throws Exception
      */
     public function next()
     {
@@ -308,7 +297,7 @@ class CsvReader implements Iterator
             $this->init();
         }
 
-        while (($row = $this->readRow()) !== false) {
+        while (($row = $this->readRow()) !== null) {
             $this->currentIndex++;
 
             if ($row === [ null ] && $this->isIgnoreEmptyDataLines()) {
@@ -344,7 +333,7 @@ class CsvReader implements Iterator
             $this->currentRow = array_combine($headers, $row);
             break;
         }
-        if ($row === false) {
+        if ($row === null) {
             $this->currentRow = null;
         }
     }
@@ -366,26 +355,23 @@ class CsvReader implements Iterator
     /**
      * Reads a row from CSV file
      *
-     * @return false|array
-     * @throws Exception
+     * @return null|array
      */
     private function readRow()
     {
         $fileHandle = $this->getValidFileHandle();
         if (feof($fileHandle)) {
-            return false;
+            return null;
         }
         $this->lineNumber++;
         if (($row = fgetcsv($fileHandle, 0, $this->csvFormat->getDelimiter(), $this->csvFormat->getEnclosure(), $this->csvFormat->getEscape())) === false) {
-            return false;
+            return null;
         }
         return $row;
     }
 
     /**
      * Returns file position to the beginning of CSV file
-     *
-     * @throws Exception
      */
     public function rewind()
     {
@@ -401,7 +387,7 @@ class CsvReader implements Iterator
     }
 
     /**
-     * Returns file handle CSV Reader associated with. You may use this method to make something with file handle.
+     * Returns file handle CSV reader associated with. You may use this method to make something with file handle.
      * But in most cases you don't need this.
      *
      * @return resource|null
@@ -415,7 +401,6 @@ class CsvReader implements Iterator
      * Returns valid file handle CSV reader associated with or raises exception otherwise.
      *
      * @return resource
-     * @throws Exception
      */
     private function getValidFileHandle()
     {
@@ -438,9 +423,9 @@ class CsvReader implements Iterator
 
     /**
      * @param bool $ignoreLessDataColumns
-     * @return self
+     * @return CsvReader
      */
-    public function setIgnoreLessDataColumns(bool $ignoreLessDataColumns): self
+    public function setIgnoreLessDataColumns(bool $ignoreLessDataColumns): CsvReader
     {
         $this->ignoreLessDataColumns = $ignoreLessDataColumns;
         return $this;
@@ -456,9 +441,9 @@ class CsvReader implements Iterator
 
     /**
      * @param bool $ignoreMoreDataColumns
-     * @return self
+     * @return CsvReader
      */
-    public function setIgnoreMoreDataColumns(bool $ignoreMoreDataColumns): self
+    public function setIgnoreMoreDataColumns(bool $ignoreMoreDataColumns): CsvReader
     {
         $this->ignoreMoreDataColumns = $ignoreMoreDataColumns;
         return $this;

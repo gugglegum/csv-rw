@@ -2,7 +2,9 @@
 
 namespace gugglegum\CsvRw;
 
-class Exception extends \Exception
+use RuntimeException;
+
+class Exception extends RuntimeException
 {
 
 }
