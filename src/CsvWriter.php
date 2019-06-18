@@ -132,9 +132,10 @@ class CsvWriter
     /**
      * Initializes internal state of newly opened or assigned file
      *
+     * @return CsvWriter
      * @throws Exception
      */
-    private function init()
+    public function init(): CsvWriter
     {
         $this->lineNumber = 0;
         if ($this->withHeaders) {
@@ -144,6 +145,7 @@ class CsvWriter
             $this->write($this->headers);
         }
         $this->isInitialized = true;
+        return $this;
     }
 
     /**
