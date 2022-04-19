@@ -229,6 +229,7 @@ class CsvWriter
         foreach ($this->headers as $key) {
             if (!array_key_exists($key, $row)) {
                 $missing[] = $key;
+                continue;
             }
             $fields[] = $row[$key];
         }
